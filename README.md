@@ -20,7 +20,7 @@ GATK4 best-practice pipelines for germline short variant discovery from whole-ge
 
 ## Workflow Overview
 
-![Workflow Diagram](docs/workflow_diagram.png)
+![Workflow Diagram](workflow_diagram.png)
 
 ---
 
