@@ -62,7 +62,7 @@ set -e
 ##use the r1 prefix as the output prefix
 ##please make sure r1 and r2 data are all included in the cleanfq directory
 echo "pbspath \$PBS_O_WORKDIR"
-#work_path=/hpf/largeprojects/smital/tingliu/GATK_testrun3_qsubscript
+#work_path=/tingliu/GATK_testrun3_qsubscript
 work_path="\$PBS_O_WORKDIR"
 #file=\$file_path/cleanfq/*.r1_paired.fq.gz
 gatk_bundle="/GRCh38_Resources/GATK_bundle"
@@ -159,7 +159,7 @@ gatk HaplotypeCaller --emit-ref-confidence GVCF \\
 #do
 #echo "\${i}"
 #gatk HaplotypeCaller --emit-ref-confidence GVCF \\
-#-R "/hpf/largeprojects/smital/references/homo_sapiens/v37_decoy/gatk/human_g1k_v37_decoy_mod.fasta" \\
+#-R "/references/homo_sapiens/v37_decoy/gatk/human_g1k_v37_decoy_mod.fasta" \\
 #-I "\${work_path}/gatk/\${prefix}.clean.sorted.markdup.BQSR.bam" \\
 #-L "\${i}" \\
 #-O "\${work_path}/split_chrs/\${prefix}.HC.\${i}.g.vcf.gz" && echo "** \$prefix.HC.HC.\${i}.g.vcf.gz done **"

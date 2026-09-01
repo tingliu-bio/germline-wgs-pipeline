@@ -1,17 +1,14 @@
 use strict;
 use warnings;
 #dealing with the output ouf GATK_refinment modules, filter out the lowGQ samples one de novo mutation for each line
-#dealing with the output ouf GATK_refinment modules, filter out the lowGQ samples one de novo mutation for each line
 ##take in the output of intervar, revert the genomic coordinates into vcf style
-#take CHD and CMP annotation, annotate the genelist
 #take in sample file which named sample.out, genrate by the script print_samples.pl, put the sample id in the out file
 
 my %all_vcf=();
-open (IN,"TOF_41fam_final_denovo_intervar_out.hg38_multianno.txt.intervar") or die "cannot open vcf file";
-#open (IN,"/hpf/largeprojects/smital/PROCEED_20191023/GATK_GRCh38_realign/joint_call_trios_run2_noAS/denovo_only");
+open (IN,"final_denovo_intervar_out.hg38_multianno.txt.intervar") or die "cannot open vcf file";
 
 my %chd_genes=();
-open(CHD,"/hpf/largeprojects/smital/genelists/Gene_list_CHD_reclassification_20190409_JB.txt");
+open(CHD,"/genelists/Gene_list_reclassification_20190409.txt");
 while(<CHD>){
   chomp;
   my($gene,$catg)=split("\t");
@@ -23,7 +20,7 @@ while(<CHD>){
   }
 }#while
 my %cmp_genes=();
-open(CMP,"/hpf/largeprojects/smital/genelists/2018-01-08_CMP_genelist.txt");
+open(CMP,"/genelists/genelist.txt");
 while(<CMP>){
   chomp;
   my($gene,$catg)=split("\t");
@@ -38,8 +35,6 @@ my $cmp_gene_tag=".";
 my $chd_gene_tag=".";
 
 open (OUT,">re_mod_clinvar_denovo.out");
-#open (CMP,">re_mod_clinvar_cmp_genes_only_denovo.out");
-#print CMP "chr\tstart\tref\talt\ttype\tref_gene\tfunc_g\texoic_Gne\treformed_annot\tintv_annot\tens_gene\tsnpid\taa_ens\taa_refg\n";
 print OUT "chr\tstart\tref\talt\ttype\tref_gene\tfunc_g\texoic_Gne\treformed_annot\tintv_annot\tens_gene\tsnpid\taa_ens\taa_refg\tgnomAD_freqall\tfreq_esp\tfreq_1kg_all\tCAD_raw\tCAD_phred\tSIFT\tGERP\n";
 my @head_id=();
 while(<IN>){
