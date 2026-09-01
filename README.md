@@ -149,6 +149,76 @@ perl scripts/deal_clinvar_re_denovo.pl
 
 ---
 
+## Workflow 4: Variant Annotation and ACMG/AMP Classification
+
+Downstream annotation and classification of germline variants, including de novo calls from Workflow 3. This workflow integrates functional annotation from ANNOVAR and InterVar with population frequency data from gnomAD and ClinVar, then applies the ACMG/AMP classification framework to prioritize candidate pathogenic variants.
+
+### Annotation
+
+Variant annotations from ANNOVAR are processed to consolidate gene assignments for variants mapping to multiple transcripts, and merged with ClinVar and InterVar outputs into a per-sample annotated table. Each variant is classified as SNP or INDEL and tagged with allele counts across the cohort.
+
+### ACMG/AMP Classification
+
+The classification step implements the full ACMG/AMP evidence framework in R, scoring each variant across pathogenic and benign criteria and combining evidence to produce a final call.
+
+**Pathogenic criteria:**
+
+| Strength | Criteria |
+|---|---|
+| Very Strong | PVS1: predicted loss-of-function in a gene where LOF is a known disease mechanism |
+| Strong | PS1–PS4 |
+| Moderate | PM1–PM6 |
+| Supporting | PP1–PP5 |
+
+**Benign criteria:**
+
+| Strength | Criteria |
+|---|---|
+| Stand-alone | BA1: allele frequency > 5% in gnomAD/ExAC/1000 Genomes |
+| Strong | BS1–BS4 |
+| Supporting | BP1–BP7 |
+
+Pathogenic and benign criteria are counted independently and combined following ACMG rules to assign one of five final classifications: Pathogenic, Likely Pathogenic, VUS, Likely Benign, or Benign.
+
+Example of how pathogenic rules are applied:
+
+```r
+# PVS1 + at least one PS criterion → Pathogenic
+data[data$pvs.count == 1 & data$ps.count >= 1,
+     'acmg.pathogenic.classification'] <- 'pathogenic'
+
+# Two or more PS criteria → Pathogenic
+data[data$ps.count >= 2,
+     'acmg.pathogenic.classification'] <- 'pathogenic'
+
+# PVS1 + one PM criterion → Likely Pathogenic
+data[data$pvs.count == 1 & data$pm.count == 1,
+     'acmg.pathogenic.classification'] <- 'likely.pathogenic'
+
+# Three or more PM criteria → Likely Pathogenic
+data[data$pm.count >= 3,
+     'acmg.pathogenic.classification'] <- 'likely.pathogenic'
+```
+
+**Additional features:**
+- Population frequency analysis using gnomAD, ExAC, and 1000 Genomes, with race-stratified thresholds (EUR, AFR, EAS, SAS)
+- Fisher's exact test for case-control allele frequency comparison
+- Family segregation analysis: co-segregation with disease in affected family members activates PP1
+- Gene-list aware classification: disease genes and modifier genes are handled separately
+- Multi-transcript conflict resolution: where a variant maps to multiple transcripts with conflicting calls, the most clinically significant classification is retained
+
+### Annotation Databases Used
+
+| Database | Purpose |
+|---|---|
+| ANNOVAR | Functional annotation |
+| InterVar | Automated ACMG rule scoring |
+| ClinVar | Clinical variant evidence |
+| gnomAD / ExAC | Population allele frequencies |
+| 1000 Genomes Project | Population allele frequencies |
+
+---
+
 ## Datasets
 
 ### HGDP (Control Cohort)
