@@ -237,4 +237,4 @@ Reference control cohort from the Human Genome Diversity Project (HGDP).
 - Monitor job status after each submission: `qstat -u yourusername`
 - The alignment (Step 2) and joint genotyping (Step 3) are the most time-consuming steps — ensure each finishes successfully before proceeding.
 - Intermediate files are not deleted automatically. Clean them up manually after all samples in a run are complete to avoid storage issues.
-- Create a `./logs/` folder and move log files there after each step to keep the working directory tidy.
+
