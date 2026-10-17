@@ -17,7 +17,7 @@ cd $work_path
 
 outdir=$PBS_O_WORKDIR
 #echo $file
-file_predix="GATK4.0_combined_CMPs_22fam_denovo_gvcfs_chr1-22X.indels_snps.recalibrated.passed_chr1-22"
+file_predix="GATK4.0_combined_22fam_denovo_gvcfs_chr1-22X.indels_snps.recalibrated.passed_chr1-22"
 pedigree_file="fam.ped"
 #predix of gzipped vcf file and pedigree file should be specified here
 
